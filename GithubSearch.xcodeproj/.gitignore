@@ -1,0 +1,7 @@
+# Arquivos gerados pelo Xcode
+*.xcuserstate
+xcuserdata/
+*.xcscmblueprint
+*.xccheckout
+.DS_Store
+*.gitignore~
