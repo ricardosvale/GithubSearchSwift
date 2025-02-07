@@ -1,0 +1,42 @@
+# macOS e Xcode
+.DS_Store
+*.swp
+*.xcuserstate
+xcuserdata/
+*.xcscmblueprint
+*.xccheckout
+DerivedData/
+*.pbxuser
+*.mode1v3
+*.mode2v3
+*.perspectivev3
+.idea/
+
+# Swift Package Manager
+/.swiftpm
+/Package.resolved
+
+# Build artifacts
+build/
+*.o
+*.d
+*.map
+*.tbd
+
+# Certificates & Profiles
+*.mobileprovision
+*.cer
+*.p12
+*.xcconfig
+
+# Xcode Cloud
+.xcresult/
+
+# Crashlytics & Firebase
+crashlytics-build/
+firebase-debug.log
+GoogleService-Info.plist
+
+# Logs e arquivos temporários
+*.log
+*.tmp
