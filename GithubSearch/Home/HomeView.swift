@@ -10,7 +10,7 @@ import SwiftUI
 struct HomeView: View {
     
     @StateObject private var homeViewModel = HomeViewModel()
-    @State private var navigationProfile = false
+    @State private var navigationProfile: String? = nil
     
     var body: some View {
         NavigationView {
@@ -28,7 +28,7 @@ struct HomeView: View {
                     .padding(.horizontal, 30)
                     
                     Button(action: {
-                        navigationProfile = true
+                        navigationProfile = homeViewModel.username
                     }) {
                         Text("Search")
                             .font(.headline)
@@ -36,6 +36,10 @@ struct HomeView: View {
                             .padding()
                     }
                     .disabled(homeViewModel.username.isEmpty)
+                    .navigationDestination(for: String.self) { username in
+                        ProfileView(username: username)
+                        
+                    }
                 }
                 
             }
