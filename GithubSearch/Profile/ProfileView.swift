@@ -8,9 +8,11 @@
 import SwiftUI
 
 struct ProfileView: View {
+    var username: String
     var body: some View {
         VStack {
-            Text("Image perfil")
+            AsyncImage(url:URL(string: "https://avatars.githubusercontent.com/u/169118123?v=4"))
+                .clipShape(Circle())
             Text("Name")
             
             ScrollView{
@@ -25,5 +27,5 @@ struct ProfileView: View {
 }
 
 #Preview {
-    ProfileView()
+    ProfileView(username: "")
 }

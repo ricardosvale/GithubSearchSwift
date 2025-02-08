@@ -6,9 +6,35 @@
 //
 
 import SwiftUI
+import Alamofire
 
-struct ProfileViewModel: View {
-    var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+class ProfileViewModel: ObservableObject {
+    @Published var username: String
+    @Published var imageUrl: String
+    @Published var repositories: [Repository] = []
+    @Published var errorMessage: String?
+    
+    private let service = Service()
+    
+    init(username: String) {
+        self.username = username
+        self.imageUrl = ""
+        fetchRepositories()
+        
+    }
+    
+    func fetchRepositories() {
+        service.fetchRepositoriesGit(for: username) { result in
+            DispatchQueue.main.async {
+                switch result {
+                case .success(let (login, avatar, repositories)):
+                    self.username = login
+                    self.imageUrl = avatar
+                    self.repositories = repositories
+                case .failure(let error):
+                    self.errorMessage = "Erro: \(error.localizedDescription)"
+                }
+            }
+        }
     }
 }
