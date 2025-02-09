@@ -47,11 +47,7 @@ struct ProfileView: View {
                             .padding(.top, 5)
                     }
                     
-                    if let errorMessage = profileViewModel.errorMessage {
-                        Text(errorMessage)
-                            .foregroundStyle(.red)
-                    }
-                }
+                 }
                 .padding()
                 .frame(maxWidth: .infinity, alignment: .center)
                 .background(Color.gray.opacity(0.1))
@@ -69,9 +65,13 @@ struct ProfileView: View {
                                         .font(.subheadline)
                                         .foregroundStyle(.gray)
                                 }
-                                .padding(.vertical, 10)
+                                .padding(.vertical, 8)
                                 .padding(.horizontal, 15)
                                 
+                                if let errorMessage = profileViewModel.errorMessage {
+                                    Text(errorMessage)
+                                        .foregroundStyle(.red)
+                                }
                                 
                                 Divider()
                                     .frame(maxWidth: .infinity, alignment: .leading)

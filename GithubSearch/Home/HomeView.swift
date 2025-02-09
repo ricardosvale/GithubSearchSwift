@@ -12,6 +12,9 @@ struct HomeView: View {
     @StateObject private var homeViewModel = HomeViewModel()
     @State private var showErrorAlert = false
     @State private var navigateToProfile = false
+    @State private var searchedUsername: String = ""
+    @State private var errorMessage: String = ""
+    @State private var emptyUsernameAlert = false
     
     var body: some View {
         NavigationStack {
@@ -20,7 +23,7 @@ struct HomeView: View {
                 VStack{
                     TextField("", text: $homeViewModel.username, prompt: Text("Username")
                         .foregroundStyle(Color.gray)
-                       
+                              
                     )
                     .padding(8)
                     .autocapitalization(.none)
@@ -31,36 +34,45 @@ struct HomeView: View {
                     .padding(.horizontal, 30)
                     
                     Button(action: {
-                        
-                        homeViewModel.fetchUser { error in
-                            if let error = error, error == "Usuário não encontrado" {
-                                showErrorAlert = true
-                                navigateToProfile = false
-                            } else {
-                                showErrorAlert = false
-                                navigateToProfile = true
+//                        if homeViewModel.username.isEmpty {
+//                           emptyUsernameAlert = true
+//
+//                        } else {
+                            homeViewModel.fetchUser { error in
+                                if let error = error {
+                                    errorMessage = error
+                                    showErrorAlert = true
+                                    navigateToProfile = false
+                                } else {
+                                    searchedUsername = homeViewModel.username
+                                    showErrorAlert = false
+                                    navigateToProfile = true
+                                }
                             }
-                        }
+                        
                     }) {
                         Text("Search")
                             .font(.headline)
                             .foregroundStyle(.blue)
                             .padding()
                     }
-                    .disabled(homeViewModel.username.isEmpty)
+                    
                     .navigationDestination(isPresented: $navigateToProfile) {
-                                            ProfileView(username: homeViewModel.username)
-                                        }
-                 }
+                        ProfileView(username: homeViewModel.username)
+                    }
+                }
                 .alert(isPresented: $showErrorAlert) {
-                    Alert(title: Text("Erro"), message: Text("Usuário não encontrado"), dismissButton: .default(Text("OK")))
+                    Alert(title: Text("Erro"), message: Text(errorMessage), dismissButton: .default(Text("OK")))
+                }
+//                .alert(isPresented: $emptyUsernameAlert) {
+//                    Alert(title: Text("Erro"), message: Text("Digite um usuário"), dismissButton: .default(Text("OK")))
                 }
             }
-                .ignoresSafeArea()
-            }
+            .ignoresSafeArea()
         }
     }
-    
+
+
 
 #Preview {
     HomeView()

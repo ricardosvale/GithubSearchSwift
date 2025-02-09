@@ -24,22 +24,20 @@ class ProfileViewModel: ObservableObject {
     }
     
     func fetchRepositories() {
-        service.fetchRepositoriesGit(for: username) { result in
-            DispatchQueue.main.async {
-                switch result {
-                case .success(let (login, avatar, repositories)):
-                    self.username = login
-                    self.imageUrl = avatar
-                    self.repositories = repositories
-                    self.errorMessage = nil
-                case .failure(let error):
-                    if let error = error as? NSError, error.code == 404 {
-                        self.errorMessage = "Usuário não encontrado"
-                    } else {
-                        self.errorMessage = "Erro: \(error.localizedDescription)"
-                    }
+         service.fetchRepositoriesGit(for: username) { [weak self] result in
+             guard let self = self else { return }
+             
+             DispatchQueue.main.async {
+                 switch result {
+                 case .success(let (_, avatar, repositories)):
+                     self.imageUrl = avatar
+                     self.repositories = repositories
+                     self.errorMessage = nil
+                 case .failure:
+                     self.errorMessage = "Ocorreu um erro ao carregar os repositórios. Verifique sua conexão."
                  }
-            }
-        }
-    }
+             }
+         }
+     }
 }
+

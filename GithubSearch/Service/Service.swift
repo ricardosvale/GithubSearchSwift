@@ -16,11 +16,13 @@ class Service {
         AF.request(url).responseDecodable(of: [Repository].self) { response in
             switch response.result {
             case .success(let repositories):
-                guard let owner = repositories.first?.owner else {
-                    completion(.failure(NSError(domain: "GitHubService", code: 404, userInfo: [NSLocalizedDescriptionKey: "Nenhum repositório encontrado"])))
-                    return
+                if let owner = repositories.first?.owner {
+                    completion(.success((owner.login, owner.avatar_url, repositories)))
+                } else {
+                    let userNotFoundError = NSError(domain: "GitHubService", code: 404, userInfo: [NSLocalizedDescriptionKey: "Usuário não encontrado"])
+                    completion(.failure(userNotFoundError))
                 }
-                completion(.success((owner.login, owner.avatar_url, repositories)))
+                
                 
             case .failure(let error):
                 if let statusCode = response.response?.statusCode, statusCode == 404 {
@@ -28,7 +30,11 @@ class Service {
                     completion(.failure(userNotFoundError))
                     return
                 } else {
-                    completion(.failure(error))
+                    if let afError = error.asAFError, afError.isSessionTaskError {
+                        let networkError = NSError(domain: "GitHubService", code: -1009, userInfo: [NSLocalizedDescriptionKey: "Ocorreu um erro de rede. Verifique sua conexão com a Internet e tente novamente mais tarde."])
+                        completion(.failure(networkError))
+                        return
+                    }
                 }
             }
         }
