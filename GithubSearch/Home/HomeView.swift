@@ -13,7 +13,7 @@ struct HomeView: View {
     @State private var navigationProfile: String? = nil
     
     var body: some View {
-        NavigationView {
+        NavigationStack {
             ZStack{
                 Color(.white)
                 VStack{
