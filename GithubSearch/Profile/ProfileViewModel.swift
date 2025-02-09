@@ -31,9 +31,14 @@ class ProfileViewModel: ObservableObject {
                     self.username = login
                     self.imageUrl = avatar
                     self.repositories = repositories
+                    self.errorMessage = nil
                 case .failure(let error):
-                    self.errorMessage = "Erro: \(error.localizedDescription)"
-                }
+                    if let error = error as? NSError, error.code == 404 {
+                        self.errorMessage = "Usuário não encontrado"
+                    } else {
+                        self.errorMessage = "Erro: \(error.localizedDescription)"
+                    }
+                 }
             }
         }
     }

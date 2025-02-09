@@ -41,7 +41,7 @@ struct ProfileView: View {
                                 EmptyView()
                             }
                         }
-                       
+                        
                         Text(profileViewModel.username)
                             .font(.title3)
                             .padding(.top, 5)
@@ -75,7 +75,7 @@ struct ProfileView: View {
                                 
                                 Divider()
                                     .frame(maxWidth: .infinity, alignment: .leading)
-                             }
+                            }
                         }
                     }
                 }
@@ -85,17 +85,14 @@ struct ProfileView: View {
                     Button(action: {
                         dismiss()
                     }) {
-                        HStack {
-                            Image(systemName: "chevron.left")
-                            Text("Back")
-                        }
                     }
                 }
             }
-           .navigationBarTitleDisplayMode(.inline)
         }
+        .navigationBarTitleDisplayMode(.inline)
     }
 }
+
 
 #Preview {
     ProfileView(username: "ricardosvale")

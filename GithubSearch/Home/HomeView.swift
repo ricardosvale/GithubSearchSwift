@@ -10,7 +10,8 @@ import SwiftUI
 struct HomeView: View {
     
     @StateObject private var homeViewModel = HomeViewModel()
-    @State private var navigationProfile: String? = nil
+    @State private var showErrorAlert = false
+    @State private var navigateToProfile = false
     
     var body: some View {
         NavigationStack {
@@ -19,8 +20,10 @@ struct HomeView: View {
                 VStack{
                     TextField("", text: $homeViewModel.username, prompt: Text("Username")
                         .foregroundStyle(Color.gray)
+                       
                     )
                     .padding(8)
+                    .autocapitalization(.none)
                     .background(
                         RoundedRectangle(cornerRadius: 5)
                             .fill(Color.gray.opacity(0.1))
@@ -28,7 +31,16 @@ struct HomeView: View {
                     .padding(.horizontal, 30)
                     
                     Button(action: {
-                        navigationProfile = homeViewModel.username
+                        
+                        homeViewModel.fetchUser { error in
+                            if let error = error, error == "Usuário não encontrado" {
+                                showErrorAlert = true
+                                navigateToProfile = false
+                            } else {
+                                showErrorAlert = false
+                                navigateToProfile = true
+                            }
+                        }
                     }) {
                         Text("Search")
                             .font(.headline)
@@ -36,18 +48,19 @@ struct HomeView: View {
                             .padding()
                     }
                     .disabled(homeViewModel.username.isEmpty)
-                    .navigationDestination(for: String.self) { username in
-                        ProfileView(username: username)
-                        
-                    }
+                    .navigationDestination(isPresented: $navigateToProfile) {
+                                            ProfileView(username: homeViewModel.username)
+                                        }
+                 }
+                .alert(isPresented: $showErrorAlert) {
+                    Alert(title: Text("Erro"), message: Text("Usuário não encontrado"), dismissButton: .default(Text("OK")))
                 }
-                
             }
-            .ignoresSafeArea()
+                .ignoresSafeArea()
+            }
         }
     }
-}
-
+    
 
 #Preview {
     HomeView()
