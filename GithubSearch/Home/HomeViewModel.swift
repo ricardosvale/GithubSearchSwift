@@ -10,22 +10,24 @@ import SwiftUI
 class HomeViewModel: ObservableObject {
     
     @Published var username: String  = ""
-    
+    @Published var isLoading: Bool = false
     private let service = Service()
     
     func fetchUser(completion: @escaping (String?) -> Void) {
-        // Formatar o nome do usuário
-        let formattedUsername = username.trimmingCharacters(in: .whitespacesAndNewlines) // Remover espaços e converter para minúsculas
-        print("Buscando usuário: \(formattedUsername)")
         
+        let formattedUsername = username.trimmingCharacters(in: .whitespacesAndNewlines)
+        isLoading = true
         service.fetchRepositoriesGit(for: formattedUsername) { result in
+            self.isLoading = false
             switch result {
             case .success(_):
                 completion(nil)
             case .failure(let error):
-                print("Erro ao buscar usuário: \(error.localizedDescription)")
-                if let error = error as? NSError, error.code == 404 {
-                    completion("Usuário não encontrado")
+                let nsError = error as NSError
+                if nsError.code == -1009 {
+                    completion("A network error has occurred. Check your Internet connection and try again later.")
+                } else if nsError.code == -404 {
+                    completion("User not found. Please enter another name")
                 } else {
                     completion(error.localizedDescription)
                 }
