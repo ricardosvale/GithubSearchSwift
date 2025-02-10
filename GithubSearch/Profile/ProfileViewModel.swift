@@ -6,7 +6,6 @@
 //
 
 import SwiftUI
-import Alamofire
 
 class ProfileViewModel: ObservableObject {
     @Published var username: String
@@ -20,7 +19,6 @@ class ProfileViewModel: ObservableObject {
         self.username = username
         self.imageUrl = ""
         fetchRepositories()
-        
     }
     
     func fetchRepositories() {

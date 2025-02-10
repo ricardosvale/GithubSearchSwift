@@ -22,7 +22,6 @@ struct HomeView: View {
                 VStack{
                     TextField("", text: $homeViewModel.username, prompt: Text("Username")
                         .foregroundStyle(Color.gray)
-                              
                     )
                     .padding(8)
                     .autocapitalization(.none)
@@ -44,7 +43,6 @@ struct HomeView: View {
                                 navigateToProfile = true
                             }
                         }
-                        
                     }) {
                         if homeViewModel.isLoading {
                             ProgressView() // Mostra o indicador de carregamento
@@ -56,8 +54,7 @@ struct HomeView: View {
                                 .foregroundStyle(.blue)
                                 .padding()
                         }
-                        
-                    }   .navigationDestination(isPresented: $navigateToProfile) {
+                     }   .navigationDestination(isPresented: $navigateToProfile) {
                         ProfileView(username: homeViewModel.username)
                     }
                 }
@@ -69,8 +66,6 @@ struct HomeView: View {
         .ignoresSafeArea()
     }
 }
-
-
 
 #Preview {
     HomeView()
