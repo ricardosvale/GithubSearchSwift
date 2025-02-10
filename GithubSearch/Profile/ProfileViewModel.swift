@@ -24,20 +24,20 @@ class ProfileViewModel: ObservableObject {
     }
     
     func fetchRepositories() {
-         service.fetchRepositoriesGit(for: username) { [weak self] result in
-             guard let self = self else { return }
-             
-             DispatchQueue.main.async {
-                 switch result {
-                 case .success(let (_, avatar, repositories)):
-                     self.imageUrl = avatar
-                     self.repositories = repositories
-                     self.errorMessage = nil
-                 case .failure:
-                     self.errorMessage = "Ocorreu um erro ao carregar os repositórios. Verifique sua conexão."
-                 }
-             }
-         }
-     }
+        service.fetchRepositoriesGit(for: username) { [weak self] result in
+            guard let self = self else { return }
+            
+            DispatchQueue.main.async {
+                switch result {
+                case .success(let (repositories)):
+                    self.imageUrl = repositories.first?.owner.avatar_url ?? ""
+                    self.repositories = repositories
+                    self.errorMessage = nil
+                case .failure:
+                    self.errorMessage = "A network error has occurred. Check your Internet connection and try again later."
+                }
+            }
+        }
+    }
 }
 

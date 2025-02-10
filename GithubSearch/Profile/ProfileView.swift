@@ -46,8 +46,7 @@ struct ProfileView: View {
                             .font(.title3)
                             .padding(.top, 5)
                     }
-                    
-                 }
+                }
                 .padding()
                 .frame(maxWidth: .infinity, alignment: .center)
                 .background(Color.gray.opacity(0.1))

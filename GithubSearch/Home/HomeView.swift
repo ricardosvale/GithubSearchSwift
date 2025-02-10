@@ -14,7 +14,6 @@ struct HomeView: View {
     @State private var navigateToProfile = false
     @State private var searchedUsername: String = ""
     @State private var errorMessage: String = ""
-    @State private var emptyUsernameAlert = false
     
     var body: some View {
         NavigationStack {
@@ -34,43 +33,42 @@ struct HomeView: View {
                     .padding(.horizontal, 30)
                     
                     Button(action: {
-//                        if homeViewModel.username.isEmpty {
-//                           emptyUsernameAlert = true
-//
-//                        } else {
-                            homeViewModel.fetchUser { error in
-                                if let error = error {
-                                    errorMessage = error
-                                    showErrorAlert = true
-                                    navigateToProfile = false
-                                } else {
-                                    searchedUsername = homeViewModel.username
-                                    showErrorAlert = false
-                                    navigateToProfile = true
-                                }
+                        homeViewModel.fetchUser { error in
+                            if let error = error {
+                                errorMessage = error
+                                showErrorAlert = true
+                                navigateToProfile = false
+                            } else {
+                                searchedUsername = homeViewModel.username
+                                showErrorAlert = false
+                                navigateToProfile = true
                             }
+                        }
                         
                     }) {
-                        Text("Search")
-                            .font(.headline)
-                            .foregroundStyle(.blue)
-                            .padding()
-                    }
-                    
-                    .navigationDestination(isPresented: $navigateToProfile) {
+                        if homeViewModel.isLoading {
+                            ProgressView() // Mostra o indicador de carregamento
+                                .progressViewStyle(CircularProgressViewStyle())
+                                .padding()
+                        } else {
+                            Text("Search")
+                                .font(.headline)
+                                .foregroundStyle(.blue)
+                                .padding()
+                        }
+                        
+                    }   .navigationDestination(isPresented: $navigateToProfile) {
                         ProfileView(username: homeViewModel.username)
                     }
                 }
                 .alert(isPresented: $showErrorAlert) {
-                    Alert(title: Text("Erro"), message: Text(errorMessage), dismissButton: .default(Text("OK")))
-                }
-//                .alert(isPresented: $emptyUsernameAlert) {
-//                    Alert(title: Text("Erro"), message: Text("Digite um usuário"), dismissButton: .default(Text("OK")))
+                    Alert(title: Text("Error"), message: Text(errorMessage), dismissButton: .default(Text("OK")))
                 }
             }
-            .ignoresSafeArea()
         }
+        .ignoresSafeArea()
     }
+}
 
 
 
