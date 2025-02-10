@@ -23,6 +23,7 @@ struct HomeView: View {
                     TextField("", text: $homeViewModel.username, prompt: Text("Username")
                         .foregroundStyle(Color.gray)
                     )
+                    .foregroundStyle(.black)
                     .padding(8)
                     .autocapitalization(.none)
                     .background(
