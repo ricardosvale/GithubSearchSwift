@@ -38,3 +38,4 @@ O projeto utiliza **Alamofire** para realizar requisições HTTP. Ele já está 
 3.	Os resultados correspondentes serão exibidos em uma lista.
 4.	Se houver erro na busca, um alerta será exibido informando o problema.
 
+## Projeto sera refatorado... 
